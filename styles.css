@@ -1,0 +1,43 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: rgb(252, 252, 254);
+    
+}
+
+.titulo {
+    text-align: center;
+}
+
+.color-mixer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+   
+}
+
+.slider {
+    display: flex;
+    align-items: center;
+    padding: 5PX;
+    
+}
+
+input[type="range"] {
+    width: 200px;
+    margin: 0 10px;
+}
+
+.result-color {
+    width: 450px;
+    height: 390PX;
+    margin-top: 20px;
+    border: 1px solid #000;
+    border-radius: 10px;
+}
+
+.percentage-label {
+    font-size: 12px;
+}
+
+
