@@ -1,36 +1,73 @@
-// script.js
-
-const redSlider = document.getElementById("red-slider");
-const greenSlider = document.getElementById("green-slider");
-const blueSlider = document.getElementById("blue-slider");
-const resultColor = document.querySelector(".result-color");
-const redPercentage = document.getElementById("red-percentage");
-const greenPercentage = document.getElementById("green-percentage");
-const bluePercentage = document.getElementById("blue-percentage");
-
-
-function updateResultColor() {
-  const redValue = redSlider.value;
-  const greenValue = greenSlider.value;
-  const blueValue = blueSlider.value;
-  const color = `rgb(${redValue}, ${greenValue}, ${blueValue})`;
-  resultColor.style.backgroundColor = color;
-
-  // Calcular as porcentagens
-  const total = parseInt(redSlider.max);
-  const redPercent = ((redValue / total) * 100).toFixed(1);
-  const greenPercent = ((greenValue / total) * 100).toFixed(1);
-  const bluePercent = ((blueValue / total) * 100).toFixed(1);
-
-  // Exibir as porcentagens
-  redPercentage.textContent = redPercent + "%";
-  greenPercentage.textContent = greenPercent + "%";
-  bluePercentage.textContent = bluePercent + "%";
-}
-
-redSlider.addEventListener("input", updateResultColor);
-greenSlider.addEventListener("input", updateResultColor);
-blueSlider.addEventListener("input", updateResultColor);
-
-// Atualize a cor resultante e as porcentagens quando a página carregar
-window.addEventListener("load", updateResultColor);
+document.addEventListener('DOMContentLoaded', () => {
+    const cards = document.querySelectorAll('.memory-card') 
+  
+    let hasFlippedCard = false 
+    let lockBoard = false 
+    let firstCard, secondCard 
+    const score = document.querySelector('#score')
+    var cadrdsMatched = []
+  
+    function flipCard() {
+      if (lockBoard) return 
+      if (this === firstCard) return 
+  
+      this.classList.add('flip') 
+  
+      if (!hasFlippedCard) {
+        hasFlippedCard = true 
+        firstCard = this 
+  
+        return 
+      }
+  
+      secondCard = this 
+      checkForMatch() 
+    }
+  
+    function checkForMatch() {
+      let isMatch = firstCard.dataset.id === secondCard.dataset.id 
+  
+      isMatch ? disableCards() : unflipCards() 
+    }
+  
+    function disableCards() {
+      
+      firstCard.removeEventListener('click', flipCard) 
+      secondCard.removeEventListener('click', flipCard) 
+      // remove cartas combinadas
+      console.log([firstCard, secondCard])
+      //firstCard.setAttribute('src', "blank")
+      //secondCard.setAttribute('src', "blank")
+      // Pontuação
+      cadrdsMatched.push(firstCard)
+      cadrdsMatched.push(secondCard)
+      score.textContent = cadrdsMatched.length/2
+  
+      resetBoard() 
+    }
+  
+    function unflipCards() {
+      lockBoard = true 
+  
+      setTimeout(() => {
+        firstCard.classList.remove('flip') 
+        secondCard.classList.remove('flip') 
+  
+        resetBoard() 
+      }, 500) 
+    }
+  
+    function resetBoard() {
+      [hasFlippedCard, lockBoard] = [false, false] 
+      [firstCard, secondCard] = [null, null] 
+    }
+  
+    (function shuffle() {
+      cards.forEach(card => {
+        let randomPos = Math.floor(Math.random() * 12) 
+        card.style.order = randomPos 
+      }) 
+    })() 
+  
+    cards.forEach(card => card.addEventListener('click', flipCard)) 
+    })
